@@ -1,0 +1,43 @@
+﻿@page
+@model FavouriteBookmarks
+@{
+    ViewData["Title"] = "Favourite bookmarks";
+    ViewData["ActivePage"] = ManageNavPages.FavouriteBookmarks;
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col-md-6">
+        <form id="favouriteBookmarks-form">
+            <ul class="form-group" >
+                @foreach (var bookmarks in Model.Bookmarks)
+                {
+                    <li>
+                    <p asp-for="@bookmarks.Bookmark.ShortDescription">Short description: @bookmarks.Bookmark.ShortDescription</p>
+                    <a onclick="updateCounter(@bookmarks.ID)" href="@bookmarks.Bookmark.URL" target=”_blank” asp-for="@bookmarks.Bookmark.URL">Url: @bookmarks.Bookmark.URL</a>
+                    </li> 
+                }
+            </ul>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        function updateCounter(Id) {
+            console.log("id", Id);
+
+            $.ajax({
+                type: "GET",
+                url: "/Bookmarks/UpdateBookmarkCounterPerUser/" + Id,
+                success: function () {
+                    alert("Successfully clicked");
+                }
+            });
+        };
+    </script>
+}

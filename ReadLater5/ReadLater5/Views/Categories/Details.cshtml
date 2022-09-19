@@ -1,0 +1,67 @@
+﻿@model Entity.Category
+
+@{ ViewBag.Title = "Details"; }
+
+<h2>Details</h2>
+
+<div>
+    <h4>Category</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+
+    @if (Model.Bookmarks.Count != 0 && Model.Bookmarks != null)
+    {
+<h6>Bookmarks</h6> foreach (var bookmark in Model.Bookmarks)
+                {
+<ol>
+    <li>
+        <label>Description: <span>@bookmark.ShortDescription</span></label>
+        <label>Url: <span>@bookmark.URL</span></label>
+        @if (User.IsInRole("Admin"))
+        {
+@Html.ActionLink("Edit", "Edit", "Bookmarks", new { id = bookmark.ID })
+                        @Html.ActionLink("Delete", "Delete", "Bookmarks", new { id = bookmark.ID })} @*@Html.ActionLink("Add To favourites", "AddFavourites", "Bookmarks", new { id = bookmark.ID })*@
+        <button id="addFave" onclick="AddToFave(@bookmark.ID)" class="btn btn-danger">Add to favourite</button>
+
+    </li>
+</ol>}
+            }
+
+</div>
+<p>
+    @if (User.IsInRole("Admin"))
+    {
+@Html.ActionLink("Edit", "Edit", new { id = Model.ID })}
+
+    | @Html.ActionLink("Create", "Create", "Bookmarks", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section Scripts
+{
+    <script>
+
+            function AddToFave(Id) {
+                console.log("pom");
+                console.log("id", Id);
+                var id = Id;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Bookmarks/AddToFavourites/" + Id,
+                    success: function () {
+                        alert("Successfully added to favourites");
+                    }
+                });
+            };
+    </script>
+}
